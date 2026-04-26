@@ -26,6 +26,7 @@ The AI coach is built around four permanent Director/VP AI questions that never 
 | AI coaching sessions | 10/month | Unlimited |
 | Profile + roadmap | ✓ | ✓ |
 | Fear inventory + reframes | ✓ | ✓ |
+| Interview prep (all 5 rounds) | ✓ | ✓ |
 | STAR story builder | — | ✓ |
 | JD gap analyzer | — | ✓ |
 | Journey memory | 7 days | Unlimited |
@@ -37,7 +38,7 @@ The AI coach is built around four permanent Director/VP AI questions that never 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                     Streamlit Frontend                       │
-│  Home · Profile · Coach · Roadmap · Fears · STAR · JD       │
+│  Home · Profile · Coach · Roadmap · Fears · STAR · JD · Interview │
 └──────────────────────┬──────────────────────────────────────┘
                        │
 ┌──────────────────────▼──────────────────────────────────────┐
@@ -49,7 +50,7 @@ The AI coach is built around four permanent Director/VP AI questions that never 
 ┌──────────▼──────┐       ┌───────────▼──────────────────────┐
 │  Anthropic API  │       │  ChromaDB (embedded, local)       │
 │  claude-haiku   │       │  user_profiles · journeys         │
-│  ~$0.001/msg    │       │  star_stories · fears · roadmap   │
+│  ~$0.001/msg    │       │  star_stories · fears · roadmap · interview_readiness │
 └─────────────────┘       └──────────────────────────────────┘
 ```
 
@@ -78,7 +79,8 @@ careersignal/
 │   ├── 3_Roadmap.py         # 5-phase milestone tracker
 │   ├── 4_Fears.py           # Fear inventory with reframes
 │   ├── 5_STAR_Stories.py    # Story bank (Premium)
-│   └── 6_JD_Analyzer.py     # JD gap analysis (Premium)
+│   ├── 6_JD_Analyzer.py     # JD gap analysis (Premium)
+│   └── 7_Interview_Prep.py  # 5-round interview prep + AI answer coaching
 ├── core/
 │   ├── auth.py              # JWT + bcrypt
 │   ├── database.py          # SQLite user management
@@ -93,6 +95,22 @@ careersignal/
 ├── ARCHITECTURE.md          # Full system design
 └── IMPLEMENTATION.md        # Step-by-step build guide
 ```
+
+---
+
+## Interview Prep — Round Structure
+
+End-to-end preparation for the Director/VP AI interview process, with AI feedback on practice answers personalized to your profile and STAR stories.
+
+| Round | Format | Focus |
+|---|---|---|
+| 1 · Recruiter Screening | 20–30 min · Phone | Qualification gate — comp alignment, red flag check |
+| 2 · Hiring Manager | 45–60 min · Video | Strategic altitude, point of view, leadership instinct |
+| 3 · Technical / Domain | 60 min · Panel | LLM evaluation, governance, LLMOps, EU AI Act fluency |
+| 4 · Behavioral / STAR | 60 min · Panel | Leadership evidence — specificity, "I not we," STAR format |
+| Final · Negotiation | 1–3 conversations | Comp anchoring, title level, role evolution, promotion path |
+
+Each round includes a question bank, coaching tips, an AI-powered answer reviewer, and a readiness tracker persisted across sessions.
 
 ---
 
