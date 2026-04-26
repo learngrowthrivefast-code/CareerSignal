@@ -34,7 +34,7 @@ Response style:
 - Keep responses under 300 words unless the user asks for detail.
 """
 
-def build_system_prompt(profile: dict, past_context: list[str]) -> str:
+def build_system_prompt(profile: dict, past_context: list[str], star_stories: list[str] = None) -> str:
     cohort_name = COHORTS.get(profile.get("cohort", ""), "Unknown cohort")
 
     cohort_guidance = {
@@ -60,6 +60,10 @@ def build_system_prompt(profile: dict, past_context: list[str]) -> str:
     if past_context:
         past_ctx = "\n\nRELEVANT PAST COACHING CONTEXT:\n" + "\n---\n".join(past_context)
 
+    stories_ctx = ""
+    if star_stories:
+        stories_ctx = "\n\nUSER'S STAR STORIES (reference when relevant):\n" + "\n---\n".join(star_stories)
+
     return f"""{COACHING_METHODOLOGY}
 
 USER PROFILE:
@@ -73,7 +77,7 @@ USER PROFILE:
 
 COHORT-SPECIFIC GUIDANCE:
 {cohort_guidance}
-{past_ctx}
+{past_ctx}{stories_ctx}
 
 Remember: this user's profile and history are above. Reference their specific situation.
 Do not give generic advice. Connect every insight to what they have told you about themselves."""

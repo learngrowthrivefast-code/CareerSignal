@@ -2,10 +2,8 @@
 import anthropic
 from config.settings import ANTHROPIC_API_KEY, ANTHROPIC_MODEL, MAX_TOKENS
 from core.prompt_builder import build_system_prompt
-from core.vector_store import (
-    get_user_profile, search_relevant_turns,
-    save_turn, get_user_stories
-)
+from core.memory_manager import get_relevant_context
+from core.vector_store import save_turn
 import uuid
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
@@ -21,15 +19,13 @@ def get_coaching_response(
     Main coaching call. Assembles layered context and calls Haiku.
     Returns the assistant response string.
     """
-    # 1. Load user profile
-    profile_data = get_user_profile(user_id)
-    profile = profile_data["metadata"] if profile_data else {}
-
-    # 2. Retrieve semantically relevant past turns
-    past_context = search_relevant_turns(user_id, user_message, k=3)
+    # 1–2. Retrieve profile + relevant past turns + STAR stories
+    ctx = get_relevant_context(user_id, user_message)
+    profile      = ctx["profile"]
+    past_context = ctx["past_turns"]
 
     # 3. Build system prompt
-    system_prompt = build_system_prompt(profile, past_context)
+    system_prompt = build_system_prompt(profile, past_context, ctx["star_stories"])
 
     # 4. Build messages — last 6 turns for immediate context
     messages = conversation_history[-6:] if len(conversation_history) > 6 else conversation_history

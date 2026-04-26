@@ -166,10 +166,13 @@ def save_fear_status(user_id: str, fear_slug: str, status: str, notes: str = "")
         }]
     )
 
-def get_user_fears(user_id: str) -> dict[str, str]:
-    """Returns {fear_slug: status}"""
+def get_user_fears(user_id: str) -> dict[str, dict]:
+    """Returns {fear_slug: {status, notes}}"""
     col = get_collection("fears")
     results = col.get(where={"user_id": user_id}, include=["metadatas"])
     if not results["ids"]:
         return {}
-    return {m["fear_slug"]: m["status"] for m in results["metadatas"]}
+    return {
+        m["fear_slug"]: {"status": m["status"], "notes": m.get("notes", "")}
+        for m in results["metadatas"]
+    }
