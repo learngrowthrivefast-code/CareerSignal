@@ -176,3 +176,29 @@ def get_user_fears(user_id: str) -> dict[str, dict]:
         m["fear_slug"]: {"status": m["status"], "notes": m.get("notes", "")}
         for m in results["metadatas"]
     }
+
+# ── INTERVIEW READINESS ───────────────────────────────────────────────────
+def save_interview_readiness(user_id: str, round_id: str, ready: bool, notes: str = ""):
+    col = get_collection("interview_readiness")
+    col.upsert(
+        ids=[f"{user_id}_{round_id}"],
+        documents=[f"Interview round: {round_id}. Ready: {ready}. Notes: {notes}"],
+        metadatas=[{
+            "user_id":      user_id,
+            "round_id":     round_id,
+            "ready":        ready,
+            "notes":        notes,
+            "last_updated": datetime.utcnow().isoformat()
+        }]
+    )
+
+def get_interview_readiness(user_id: str) -> dict[str, dict]:
+    """Returns {round_id: {ready, notes}}"""
+    col = get_collection("interview_readiness")
+    results = col.get(where={"user_id": user_id}, include=["metadatas"])
+    if not results["ids"]:
+        return {}
+    return {
+        m["round_id"]: {"ready": m["ready"], "notes": m.get("notes", "")}
+        for m in results["metadatas"]
+    }
