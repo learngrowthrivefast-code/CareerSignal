@@ -23,12 +23,15 @@ st.markdown("*Complete this once. CareerSignal remembers and refines over time.*
 st.divider()
 
 with st.form("profile_form"):
+    st.markdown("**Which age group are you in?**")
+    st.caption("We use this to tailor your coaching — each stage of a career has different leverage points.")
     cohort = st.selectbox(
-        "Which cohort are you?",
+        "Age group",
         options=list(COHORTS.keys()),
         format_func=lambda k: COHORTS[k],
         index=list(COHORTS.keys()).index(meta.get("cohort", "AgeAbove50"))
-              if meta.get("cohort") in COHORTS else 0
+              if meta.get("cohort") in COHORTS else 0,
+        label_visibility="collapsed"
     )
     current_role = st.text_input(
         "Current role / title",

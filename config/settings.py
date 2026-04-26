@@ -13,11 +13,11 @@ JWT_SECRET      = os.getenv("JWT_SECRET", "change-me-in-production")
 JWT_ALGORITHM   = "HS256"
 JWT_EXPIRY_HRS  = 24
 
-# ChromaDB
-CHROMA_PATH = "./data/chromadb"
-
-# SQLite
-SQLITE_PATH = "./data/users.db"
+# Data paths — /data in production (Fly.io volume), ./data locally
+APP_ENV     = os.getenv("APP_ENV", "development")
+DATA_DIR    = "/data" if APP_ENV == "production" else "./data"
+CHROMA_PATH = os.path.join(DATA_DIR, "chromadb")
+SQLITE_PATH = os.path.join(DATA_DIR, "users.db")
 
 # Tiers
 FREE_SESSION_LIMIT    = 10   # messages per month
@@ -29,9 +29,9 @@ MAX_TOKENS       = 800  # per Haiku response
 
 # Cohorts
 COHORTS = {
-    "FreshGraduate":     "Fresh Builder (20–35)",
-    "AgeAbove35Less50":  "Bridge Builder (35–50)",
-    "AgeAbove50":        "Navigator (50+)",
+    "FreshGraduate":     "Age 20–35 · Fresh Builder",
+    "AgeAbove35Less50":  "Age 35–50 · Bridge Builder",
+    "AgeAbove50":        "Age 50+  · Navigator",
 }
 
 # Target roles

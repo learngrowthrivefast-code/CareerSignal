@@ -1,27 +1,23 @@
-# fly.toml — CareerSignal Fly.io configuration
-app = "careersignal"
-primary_region = "iad"        # US East — change to "lhr" (London) or "sin" (Singapore) if needed
+app = 'careersignal'
+primary_region = 'iad'
 
 [build]
   dockerfile = "Dockerfile"
 
 [env]
   APP_ENV = "production"
-  # ANTHROPIC_API_KEY and JWT_SECRET are set via: fly secrets set
-  # Never put real keys in this file
 
 [mounts]
-  # Persistent volume — ChromaDB and SQLite live here
-  # Data survives deploys and restarts
   source      = "careersignal_data"
   destination = "/data"
 
 [http_service]
   internal_port        = 8501
   force_https          = true
-  auto_stop_machines   = true    # Stops when no traffic (saves free tier)
-  auto_start_machines  = true    # Starts automatically on request
-  min_machines_running = 0       # 0 = full free tier, 1 = always warm ($3/mo)
+  auto_stop_machines   = "stop"
+  auto_start_machines  = true
+  min_machines_running = 0
+  processes            = ["app"]
 
   [http_service.concurrency]
     type       = "connections"
@@ -29,13 +25,12 @@ primary_region = "iad"        # US East — change to "lhr" (London) or "sin" (S
     soft_limit = 20
 
 [[vm]]
-  memory = "512mb"    # Free tier: 256MB shared. Upgrade to 512MB for ChromaDB
-  cpus   = 1
+  size   = "shared-cpu-1x"
+  memory = "512mb"
 
-# Health check — Fly.io uses this to know the app is ready
 [[http_service.checks]]
-  grace_period  = "10s"
+  grace_period  = "15s"
   interval      = "30s"
   method        = "GET"
-  timeout       = "5s"
+  timeout       = "10s"
   path          = "/_stcore/health"
