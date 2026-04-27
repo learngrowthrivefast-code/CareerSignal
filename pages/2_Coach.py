@@ -5,11 +5,12 @@ from core.auth import require_login
 from core.vector_store import get_user_profile, get_recent_turns
 from core.coach_engine import get_coaching_response
 from core.database import increment_session_count
-from core.styles import apply_styles, page_header
+from core.styles import apply_styles, page_header, render_signout
 from config.settings import FREE_SESSION_LIMIT
 
 st.set_page_config(page_title="AI Coach — CareerSignal", layout="wide")
 apply_styles()
+render_signout()
 
 payload = require_login(st.session_state)
 if not payload:

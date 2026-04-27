@@ -34,13 +34,43 @@ COHORTS = {
     "AgeAbove50":        "Age 50+  · Navigator",
 }
 
-# Target roles
-TARGET_ROLES = [
+# Target roles — grouped by career stage
+# Fresh Builder (20-35): Senior IC track
+TARGET_ROLES_SENIOR_IC = [
+    "Senior Software Engineer",
+    "Senior ML Engineer",
+    "Senior Data Scientist",
+    "Staff Engineer",
+    "Technical Lead",
+    "Principal Engineer",
+    "Senior AI / ML Engineer",
+]
+
+# Bridge Builder (35-50): Leadership track
+TARGET_ROLES_LEADERSHIP = [
+    "Engineering Manager",
+    "Senior Manager of Engineering",
+    "Solutions Architect",
+    "Principal AI Engineer",
+    "Head of Data Science",
+    "Head of AI / ML",
+    "Senior Manager, AI Platform",
+]
+
+# Navigator (50+): Executive track
+TARGET_ROLES_EXECUTIVE = [
     "Director of AI",
-    "VP of AI",
+    "Director of Engineering",
     "Director of AI Strategy",
     "Director of AI Programs",
-    "Head of AI / ML",
     "Director of AI Governance",
+    "VP of AI",
     "VP of Engineering (AI)",
+    "VP of Engineering",
+    "SVP of Engineering",
+    "SVP of Technology",
+    "CTO / Chief AI Officer",
+    "Chief Data Officer",
 ]
+
+TARGET_ROLES = TARGET_ROLES_SENIOR_IC + TARGET_ROLES_LEADERSHIP + TARGET_ROLES_EXECUTIVE

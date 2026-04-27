@@ -6,11 +6,12 @@ from core.vector_store import (
     get_user_profile, get_user_stories,
     save_interview_readiness, get_interview_readiness
 )
-from core.styles import apply_styles, page_header
+from core.styles import apply_styles, page_header, render_signout
 from config.settings import ANTHROPIC_API_KEY, ANTHROPIC_MODEL
 
 st.set_page_config(page_title="Interview Prep — CareerSignal", layout="wide")
 apply_styles()
+render_signout()
 
 payload = require_login(st.session_state)
 if not payload:

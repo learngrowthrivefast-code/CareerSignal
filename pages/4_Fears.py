@@ -3,10 +3,11 @@ import streamlit as st
 from core.auth import require_login
 from core.vector_store import get_user_fears, save_fear_status
 from core.roadmap import DEFAULT_FEARS
-from core.styles import apply_styles, page_header
+from core.styles import apply_styles, page_header, render_signout
 
 st.set_page_config(page_title="Fear Inventory — CareerSignal", layout="wide")
 apply_styles()
+render_signout()
 
 payload = require_login(st.session_state)
 if not payload:

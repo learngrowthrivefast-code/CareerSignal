@@ -209,3 +209,27 @@ def page_header(title: str, subtitle: str = ""):
         {"" if not subtitle else f'<p class="cs-page-subtitle">{subtitle}</p>'}
     </div>
     """, unsafe_allow_html=True)
+
+
+def render_signout():
+    """Sign-out button + user display in sidebar. Call on every authenticated page."""
+    with st.sidebar:
+        st.markdown("---")
+        name = st.session_state.get("name", "")
+        tier = st.session_state.get("tier", "free")
+        tier_label = "⭐ Premium" if tier == "premium" else "Free"
+        st.markdown(f"""
+        <div style="padding:4px 8px 12px 8px;">
+            <p style="margin:0; font-size:12px; color:#64748b; text-transform:uppercase;
+                      letter-spacing:1px;">Signed in as</p>
+            <p style="margin:4px 0 2px 0; font-size:14px; font-weight:600;
+                      color:#e2e8f0;">{name}</p>
+            <span style="font-size:11px; background:rgba(99,102,241,0.15);
+                         color:#a5b4fc; border:1px solid rgba(99,102,241,0.3);
+                         border-radius:20px; padding:2px 8px;">{tier_label}</span>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("Sign out", type="secondary", use_container_width=True, key="__signout__"):
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+            st.switch_page("Home.py")
