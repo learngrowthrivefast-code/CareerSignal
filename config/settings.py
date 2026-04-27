@@ -20,7 +20,7 @@ CHROMA_PATH = os.path.join(DATA_DIR, "chromadb")
 SQLITE_PATH = os.path.join(DATA_DIR, "users.db")
 
 # Tiers
-FREE_SESSION_LIMIT    = 10   # messages per month
+FREE_SESSION_LIMIT    = 50   # messages per month
 PREMIUM_MONTHLY_PRICE = 49   # USD
 
 # Coaching config
