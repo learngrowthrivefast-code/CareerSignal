@@ -5,9 +5,11 @@ from core.auth import require_login
 from core.vector_store import get_user_profile, get_recent_turns
 from core.coach_engine import get_coaching_response
 from core.database import increment_session_count
+from core.styles import apply_styles, page_header
 from config.settings import FREE_SESSION_LIMIT
 
 st.set_page_config(page_title="AI Coach — CareerSignal", layout="wide")
+apply_styles()
 
 payload = require_login(st.session_state)
 if not payload:
@@ -33,19 +35,29 @@ if not profile_data:
 meta = profile_data["metadata"]
 
 # ── Header ────────────────────────────────────────────────────────────────
-col1, col2 = st.columns([4, 1])
+col1, col2 = st.columns([5, 1])
 with col1:
-    st.markdown(f"## ◎ Your AI Coach")
-    st.markdown(f"*{meta.get('current_role', '')} → {meta.get('target_role', 'Director of AI')}*")
+    page_header(
+        "◎ Your AI Coach",
+        f"{meta.get('current_role', '')}  →  {meta.get('target_role', 'Director of AI')}"
+    )
 with col2:
-    st.markdown(f"**Tier:** {tier.capitalize()}")
-    if tier == "free":
-        st.markdown(f"*Sessions this month counted*")
-
-st.divider()
+    st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+    tier_color = "#6ee7b7" if tier == "premium" else "#a5b4fc"
+    tier_label = "⭐ Premium" if tier == "premium" else "Free tier"
+    st.markdown(f"""
+    <div style="text-align:right; padding-top:8px;">
+        <span style="background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.25);
+                     border-radius:20px; padding:4px 12px; font-size:12px;
+                     font-weight:600; color:{tier_color};">
+            {tier_label}
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ── Prompt chips ──────────────────────────────────────────────────────────
-st.markdown("**Quick prompts:**")
+st.markdown("<p style='font-size:13px; color:#94a3b8; font-weight:500; margin-bottom:8px;'>Quick prompts</p>",
+            unsafe_allow_html=True)
 chips = st.columns(5)
 chip_prompts = [
     "What is my biggest gap right now?",
@@ -56,9 +68,11 @@ chip_prompts = [
 ]
 for i, (col, prompt) in enumerate(zip(chips, chip_prompts)):
     with col:
-        if st.button(prompt[:28]+"…" if len(prompt)>28 else prompt,
+        if st.button(prompt[:26]+"…" if len(prompt) > 26 else prompt,
                      key=f"chip_{i}", use_container_width=True):
             st.session_state["pending_message"] = prompt
+
+st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
 
 # ── Chat history ──────────────────────────────────────────────────────────
 for msg in st.session_state["conversation"]:

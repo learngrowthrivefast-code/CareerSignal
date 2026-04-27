@@ -5,9 +5,11 @@ from core.vector_store import save_user_profile, get_user_profile
 from core.database import update_user_cohort
 from core.roadmap import DEFAULT_ROADMAP, DEFAULT_FEARS
 from core.vector_store import save_task_progress, save_fear_status
+from core.styles import apply_styles, page_header
 from config.settings import COHORTS, TARGET_ROLES
 
 st.set_page_config(page_title="My Profile — CareerSignal", layout="wide")
+apply_styles()
 
 payload = require_login(st.session_state)
 if not payload:
@@ -18,8 +20,7 @@ user_id = payload["user_id"]
 existing = get_user_profile(user_id)
 meta = existing["metadata"] if existing else {}
 
-st.markdown("## ◎ My Profile")
-st.markdown("*Complete this once. CareerSignal remembers and refines over time.*")
+page_header("◎ My Profile", "Complete this once. CareerSignal remembers and refines over time.")
 st.divider()
 
 with st.form("profile_form"):

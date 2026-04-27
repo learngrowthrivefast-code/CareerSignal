@@ -3,9 +3,14 @@ import streamlit as st
 import anthropic
 from core.auth import require_login
 from core.vector_store import get_user_profile, get_user_stories
+from core.database import get_user_count
+from core.styles import apply_styles, page_header
 from config.settings import ANTHROPIC_API_KEY, ANTHROPIC_MODEL
 
+FOUNDER_COHORT_LIMIT = 50
+
 st.set_page_config(page_title="JD Analyzer — CareerSignal", layout="wide")
+apply_styles()
 
 payload = require_login(st.session_state)
 if not payload:
@@ -15,14 +20,29 @@ if not payload:
 user_id = payload["user_id"]
 tier    = payload["tier"]
 
-st.markdown("## ◎ JD Gap Analyzer")
-st.markdown("*Paste a job description. Get your gap analysis and a tailored narrative.*")
+page_header("◎ JD Gap Analyzer", "Paste a job description. Get your gap analysis and a tailored narrative.")
 st.divider()
 
-if tier != "premium":
+total_users = get_user_count()
+in_founder_cohort = total_users <= FOUNDER_COHORT_LIMIT
+
+if tier != "premium" and not in_founder_cohort:
     st.warning("⭐ **Premium feature.** JD gap analysis is available on the Premium plan.")
     st.markdown("Upgrade to Premium to get a personalized gap analysis and interview narrative for any Director/VP AI role.")
     st.stop()
+
+if tier != "premium" and in_founder_cohort:
+    spots_left = FOUNDER_COHORT_LIMIT - total_users
+    if spots_left > 0:
+        st.success(
+            f"**Free for the first {FOUNDER_COHORT_LIMIT} users.** "
+            f"Only **{spots_left} spot{'s' if spots_left != 1 else ''}** remaining in the founder cohort — "
+            f"this becomes a Premium-only feature after that."
+        )
+    else:
+        st.success(
+            f"**You're in the founder cohort** — you have lifetime access to JD Analyzer as an early member."
+        )
 
 profile_data = get_user_profile(user_id)
 if not profile_data:

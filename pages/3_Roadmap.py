@@ -3,8 +3,10 @@ import streamlit as st
 from core.auth import require_login
 from core.vector_store import get_user_tasks, save_task_progress
 from core.roadmap import DEFAULT_ROADMAP
+from core.styles import apply_styles, page_header
 
 st.set_page_config(page_title="Roadmap — CareerSignal", layout="wide")
+apply_styles()
 
 payload = require_login(st.session_state)
 if not payload:
@@ -14,8 +16,7 @@ if not payload:
 user_id = payload["user_id"]
 tier    = payload["tier"]
 
-st.markdown("## ◎ Your Roadmap")
-st.markdown("*Your 18-month Director/VP AI transition plan. Check off milestones as you complete them.*")
+page_header("◎ Your Roadmap", "18-month Director/VP AI transition plan — check off milestones as you complete them.")
 st.divider()
 
 # Load persisted progress

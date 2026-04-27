@@ -3,8 +3,10 @@ import streamlit as st
 from core.auth import require_login
 from core.vector_store import get_user_fears, save_fear_status
 from core.roadmap import DEFAULT_FEARS
+from core.styles import apply_styles, page_header
 
 st.set_page_config(page_title="Fear Inventory — CareerSignal", layout="wide")
+apply_styles()
 
 payload = require_login(st.session_state)
 if not payload:
@@ -13,8 +15,7 @@ if not payload:
 
 user_id = payload["user_id"]
 
-st.markdown("## ◎ Fear Inventory")
-st.markdown("*Name the fear precisely. A named fear can be reframed. A vague fear just loops.*")
+page_header("◎ Fear Inventory", "Name the fear precisely. A named fear can be reframed. A vague fear just loops.")
 st.divider()
 
 saved_statuses = get_user_fears(user_id)

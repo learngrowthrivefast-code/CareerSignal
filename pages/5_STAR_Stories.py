@@ -3,8 +3,13 @@ import streamlit as st
 import re
 from core.auth import require_login
 from core.vector_store import get_user_stories, save_star_story
+from core.database import get_user_count
+from core.styles import apply_styles, page_header
+
+FOUNDER_COHORT_LIMIT = 50
 
 st.set_page_config(page_title="STAR Stories — CareerSignal", layout="wide")
+apply_styles()
 
 payload = require_login(st.session_state)
 if not payload:
@@ -14,14 +19,29 @@ if not payload:
 user_id = payload["user_id"]
 tier    = payload["tier"]
 
-st.markdown("## ◎ STAR Story Bank")
-st.markdown("*Your interview evidence vault. Situation → Task → Action → Result.*")
+page_header("◎ STAR Story Bank", "Your interview evidence vault — Situation · Task · Action · Result.")
 st.divider()
 
-if tier != "premium":
+total_users  = get_user_count()
+in_founder_cohort = total_users <= FOUNDER_COHORT_LIMIT
+
+if tier != "premium" and not in_founder_cohort:
     st.warning("⭐ **Premium feature.** STAR story bank is available on the Premium plan.")
     st.markdown("Upgrade to Premium to build your interview evidence vault and let your coach reference your stories in every session.")
     st.stop()
+
+if tier != "premium" and in_founder_cohort:
+    spots_left = FOUNDER_COHORT_LIMIT - total_users
+    if spots_left > 0:
+        st.success(
+            f"**Free for the first {FOUNDER_COHORT_LIMIT} users.** "
+            f"Only **{spots_left} spot{'s' if spots_left != 1 else ''}** remaining in the founder cohort — "
+            f"this becomes a Premium-only feature after that."
+        )
+    else:
+        st.success(
+            f"**You're in the founder cohort** — you have lifetime access to STAR Stories as an early member."
+        )
 
 COMPETENCIES = [
     "Strategic Vision", "AI Leadership", "Stakeholder Management",
