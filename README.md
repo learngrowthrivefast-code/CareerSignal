@@ -19,6 +19,9 @@ The AI coach is built around four permanent Director/VP AI questions that never 
 
 ---
 
+## Test Login
+https://careersignal.fly.dev/
+
 ## Features
 
 | Feature | Free | Premium |
